@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "npc-fingerprint"
+version = "0.2.0"
+description = "One command for web recon: fingerprinting, security posture, CVE matching with exploit data, JS recon, active checks and Nuclei suggestions."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "GPL-3.0-or-later" }
+author = [{ name = "custom-npc" }]
+keywords = ["fingerprinting", "reconnaissance", "defensive-security", "wappalyzer", "cve", "nuclei", "tls", "http-headers", "osint"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Security",
+  "Typing :: Typed",
+]
+# No upper bounds: new installs always resolve the newest releases. Lower bounds are the versions this release was built against.
+dependencies = [
+  "playwright>=1.64",     # JS-aware rendering (Chromium, installed for your user by `setup`)
+  "niquests>=3.21",       # --no-browser fetching with HTTP/2 + HTTP/3 visibility
+  "regex>=2026.9",        # per-match timeouts for community-written patterns
+  "mmh3>=5.3",            # Shodan-compatible favicon hashes
+  "cryptography>=46",     # certificate parsing
+  "rich>=15",             # terminal rendering and the live view
+  "dnspython>=2.9",       # CNAME/NS/MX/TXT lookups (resolver only, never the target)
+  "pyyaml>=6.0.3",        # `db update` parses the nuclei / OWASP favicon YAML
+]
+
+[project.optional-dependencies]
+psl = ["publicsuffixlist>=1.0"]       # exact registrable-domain logic (a built-in table is the default)
+dev = ["ruff"]
+
+[project.urls]
+Homepage = "https://github.com/custom-npc/npc-fingerprint"
+Repository = "https://github.com/custom-npc/npc-fingerprint"
+Issues = "https://github.com/custom-npc/npc-fingerprint/issues"
+Changelog = "https://github.com/custom-npc/npc-fingerprint/blob/main/CHANGELOG.md"
+
+[project.scripts]
+npc-fingerprint = "npc_fingerprint.cli:main"
+npcf = "npc_fingerprint.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+npc_fingerprint = ["data/*", "py.typed"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["F", "E9"]    # real bugs only (unused/undefined names, syntax); style is not a gate

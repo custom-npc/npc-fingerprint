@@ -1,0 +1,66 @@
+{
+ "1": {
+  "name": "CMS",
+  "priority": 1
+ },
+ "10": {
+  "name": "Analytics",
+  "priority": 1
+ },
+ "11": {
+  "name": "Blogs",
+  "priority": 1
+ },
+ "12": {
+  "name": "JavaScript frameworks",
+  "priority": 1
+ },
+ "18": {
+  "name": "Web frameworks",
+  "priority": 1
+ },
+ "22": {
+  "name": "Web servers",
+  "priority": 1
+ },
+ "23": {
+  "name": "Caching",
+  "priority": 1
+ },
+ "27": {
+  "name": "Programming languages",
+  "priority": 1
+ },
+ "31": {
+  "name": "CDN",
+  "priority": 1
+ },
+ "42": {
+  "name": "Tag managers",
+  "priority": 1
+ },
+ "59": {
+  "name": "JavaScript libraries",
+  "priority": 1
+ },
+ "6": {
+  "name": "Ecommerce",
+  "priority": 1
+ },
+ "62": {
+  "name": "PaaS",
+  "priority": 1
+ },
+ "64": {
+  "name": "Reverse proxies",
+  "priority": 1
+ },
+ "66": {
+  "name": "UI frameworks",
+  "priority": 1
+ },
+ "70": {
+  "name": "SSL/TLS certificate authorities",
+  "priority": 1
+ }
+}
