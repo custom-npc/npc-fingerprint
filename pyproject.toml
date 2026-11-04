@@ -9,7 +9,7 @@ description = "One command for web recon: fingerprinting, security posture, CVE 
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-or-later" }
-author = [{ name = "custom-npc" }]
+authors = [{ name = "custom-npc" }]
 keywords = ["fingerprinting", "reconnaissance", "defensive-security", "wappalyzer", "cve", "nuclei", "tls", "http-headers", "osint"]
 classifiers = [
   "Development Status :: 4 - Beta",
