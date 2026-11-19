@@ -1,0 +1,353 @@
+{
+ "ASP.NET": {
+  "cats": [
+   18
+  ],
+  "cookies": {
+   "ASP.NET_SessionId": "\\;confidence:75"
+  },
+  "headers": {
+   "X-AspNet-Version": "^(.+)$\\;version:\\1",
+   "X-Powered-By": "^ASP\\.NET"
+  },
+  "website": "https://dotnet.microsoft.com/apps/aspnet"
+ },
+ "Amazon CloudFront": {
+  "cats": [
+   31
+  ],
+  "headers": {
+   "Via": "\\(CloudFront\\)",
+   "X-Amz-Cf-Id": ""
+  },
+  "website": "https://aws.amazon.com/cloudfront/"
+ },
+ "Angular": {
+  "cats": [
+   12
+  ],
+  "dom": {
+   "[ng-version]": {
+    "attributes": {
+     "ng-version": "^(.+)$\\;version:\\1"
+    }
+   }
+  },
+  "website": "https://angular.io"
+ },
+ "Apache HTTP Server": {
+  "cats": [
+   22
+  ],
+  "headers": {
+   "Server": "^Apache(?:$|/([\\d.]+)|[^/-])\\;version:\\1"
+  },
+  "website": "https://httpd.apache.org"
+ },
+ "Bootstrap": {
+  "cats": [
+   66
+  ],
+  "js": {
+   "bootstrap.Alert.VERSION": "^(.+)$\\;version:\\1",
+   "jQuery.fn.tooltip.Constructor.VERSION": "^(.+)$\\;version:\\1"
+  },
+  "scriptSrc": [
+   "bootstrap(?:[-.]([\\d.]+))?(?:\\.bundle)?(?:\\.min)?\\.js\\;version:\\1\\;confidence:60"
+  ],
+  "website": "https://getbootstrap.com"
+ },
+ "Caddy": {
+  "cats": [
+   22
+  ],
+  "headers": {
+   "Server": "^Caddy"
+  },
+  "website": "https://caddyserver.com"
+ },
+ "Cloudflare": {
+  "cats": [
+   31
+  ],
+  "cookies": {
+   "__cf_bm": ""
+  },
+  "headers": {
+   "CF-RAY": "",
+   "Server": "^cloudflare$"
+  },
+  "website": "https://www.cloudflare.com"
+ },
+ "Drupal": {
+  "cats": [
+   1
+  ],
+  "headers": {
+   "X-Generator": "^Drupal(?: (\\d+))?\\;version:\\1"
+  },
+  "implies": [
+   "PHP"
+  ],
+  "js": {
+   "Drupal.settings": ""
+  },
+  "meta": {
+   "generator": "^Drupal(?: ([\\d.]+))?\\;version:\\1"
+  },
+  "website": "https://drupal.org"
+ },
+ "Express": {
+  "cats": [
+   18
+  ],
+  "headers": {
+   "X-Powered-By": "^Express$"
+  },
+  "implies": [
+   "Node.js"
+  ],
+  "website": "https://expressjs.com"
+ },
+ "Fastly": {
+  "cats": [
+   31
+  ],
+  "headers": {
+   "X-Fastly-Request-ID": ""
+  },
+  "website": "https://www.fastly.com"
+ },
+ "Google Analytics": {
+  "cats": [
+   10
+  ],
+  "js": {
+   "GoogleAnalyticsObject": ""
+  },
+  "scriptSrc": [
+   "google-analytics\\.com/(?:ga|analytics)\\.js",
+   "googletagmanager\\.com/gtag/js"
+  ],
+  "website": "https://google.com/analytics"
+ },
+ "Google Tag Manager": {
+  "cats": [
+   42
+  ],
+  "js": {
+   "google_tag_manager": ""
+  },
+  "scriptSrc": [
+   "googletagmanager\\.com/gtm\\.js"
+  ],
+  "website": "https://tagmanager.google.com"
+ },
+ "Joomla": {
+  "cats": [
+   1
+  ],
+  "implies": [
+   "PHP"
+  ],
+  "meta": {
+   "generator": "^Joomla!?(?: ([\\d.]+))?\\;version:\\1"
+  },
+  "website": "https://joomla.org"
+ },
+ "Let's Encrypt": {
+  "cats": [
+   70
+  ],
+  "certIssuer": "Let's Encrypt",
+  "website": "https://letsencrypt.org"
+ },
+ "LiteSpeed": {
+  "cats": [
+   22
+  ],
+  "headers": {
+   "Server": "^LiteSpeed"
+  },
+  "website": "https://www.litespeedtech.com"
+ },
+ "Microsoft IIS": {
+  "cats": [
+   22
+  ],
+  "headers": {
+   "Server": "^(?:Microsoft-)?IIS(?:/([\\d.]+))?\\;version:\\1"
+  },
+  "website": "https://www.iis.net"
+ },
+ "Netlify": {
+  "cats": [
+   62
+  ],
+  "headers": {
+   "Server": "^Netlify$",
+   "X-NF-Request-ID": ""
+  },
+  "website": "https://www.netlify.com"
+ },
+ "Next.js": {
+  "cats": [
+   18,
+   22
+  ],
+  "headers": {
+   "X-Powered-By": "^Next\\.js(?: ([\\d.]+))?\\;version:\\1"
+  },
+  "implies": [
+   "React",
+   "Node.js"
+  ],
+  "js": {
+   "__NEXT_DATA__": "",
+   "next.version": "^(.+)$\\;version:\\1"
+  },
+  "scriptSrc": [
+   "/_next/static/\\;confidence:70"
+  ],
+  "website": "https://nextjs.org"
+ },
+ "Nginx": {
+  "cats": [
+   22,
+   64
+  ],
+  "headers": {
+   "Server": "nginx(?:/([\\d.]+))?\\;version:\\1"
+  },
+  "website": "https://nginx.org/en"
+ },
+ "Node.js": {
+  "cats": [
+   27
+  ],
+  "website": "https://nodejs.org"
+ },
+ "PHP": {
+  "cats": [
+   27
+  ],
+  "cookies": {
+   "PHPSESSID": "\\;confidence:75"
+  },
+  "headers": {
+   "X-Powered-By": "^PHP(?:/([\\d.]+))?\\;version:\\1"
+  },
+  "website": "https://php.net"
+ },
+ "Python": {
+  "cats": [
+   27
+  ],
+  "headers": {
+   "Server": "(?:^|\\s)Python(?:/([\\d.]+))?\\;version:\\1"
+  },
+  "website": "https://python.org"
+ },
+ "React": {
+  "cats": [
+   12
+  ],
+  "dom": {
+   "[data-reactroot], [data-reactid]": {
+    "exists": ""
+   }
+  },
+  "js": {
+   "React.version": "^(.+)$\\;version:\\1"
+  },
+  "scriptSrc": [
+   "(?:^|/)react(?:-dom)?(?:\\.production)?(?:\\.min)?\\.js(?:$|\\?)\\;confidence:50"
+  ],
+  "website": "https://reactjs.org"
+ },
+ "Shopify": {
+  "cats": [
+   6
+  ],
+  "headers": {
+   "X-ShopId": ""
+  },
+  "js": {
+   "Shopify.shop": ""
+  },
+  "scriptSrc": [
+   "cdn\\.shopify\\.com/"
+  ],
+  "website": "https://shopify.com"
+ },
+ "Varnish": {
+  "cats": [
+   23
+  ],
+  "headers": {
+   "Via": "varnish(?: \\(Varnish/([\\d.]+)\\))?\\;version:\\1",
+   "X-Varnish": ""
+  },
+  "website": "https://varnish-cache.org"
+ },
+ "Vercel": {
+  "cats": [
+   62
+  ],
+  "headers": {
+   "Server": "^Vercel$",
+   "X-Vercel-Id": ""
+  },
+  "website": "https://vercel.com"
+ },
+ "Vue.js": {
+  "cats": [
+   12
+  ],
+  "dom": {
+   "[data-v-app]": {
+    "exists": ""
+   }
+  },
+  "js": {
+   "Vue.version": "^(.+)$\\;version:\\1"
+  },
+  "scriptSrc": [
+   "(?:^|/)vue(?:\\.runtime)?(?:\\.global)?(?:\\.prod)?(?:\\.min)?\\.js(?:$|\\?)\\;confidence:50"
+  ],
+  "website": "https://vuejs.org"
+ },
+ "WordPress": {
+  "cats": [
+   1,
+   11
+  ],
+  "html": [
+   "<link rel=[\\\"']stylesheet[\\\"'][^>]+/wp-(?:content|includes)/\\;confidence:60"
+  ],
+  "implies": [
+   "PHP"
+  ],
+  "meta": {
+   "generator": "^WordPress(?: ([\\d.]+))?\\;version:\\1"
+  },
+  "scriptSrc": [
+   "/wp-(?:content|includes)/\\;confidence:80"
+  ],
+  "website": "https://wordpress.org"
+ },
+ "jQuery": {
+  "cats": [
+   59
+  ],
+  "js": {
+   "jQuery.fn.jquery": "^(.+)$\\;version:\\1"
+  },
+  "scriptSrc": [
+   "jquery(?:-|\\.)([\\d.]*\\d)[^/]*\\.js\\;version:\\1",
+   "/([\\d.]+)/jquery(?:\\.min)?\\.js\\;version:\\1",
+   "(?:^|/)jquery(?:\\.min)?\\.js(?:$|\\?)\\;confidence:60"
+  ],
+  "website": "https://jquery.com"
+ }
+}

@@ -1,0 +1,83 @@
+# Header-anomaly rules. Two tiers, on purpose:
+#   layered       - plausible with a reverse proxy / multi-backend setup (nginx in front of IIS is normal)
+#   contradiction - not something a single honest stack can produce (needs capability evidence)
+# Every rule carries a `why` that is shown to the analyst.
+
+# --- web-server identities (from the Server header) --------------------------------------------
+[[server]]
+id = "nginx"
+pattern = '^nginx(?:/([\d.]+))?'
+[[server]]
+id = "apache"
+pattern = '^Apache(?:$|/([\d.]+)|[^/-])'
+[[server]]
+id = "iis"
+pattern = '^(?:Microsoft-)?IIS(?:/([\d.]+))?'
+
+# --- protocol capability: a server version that cannot speak the protocol we observed ---------
+[[capability]]
+server = "nginx"
+protocol = "h2"
+min_version = "1.9.5"
+why = "nginx gained HTTP/2 support in 1.9.5"
+
+[[capability]]
+server = "apache"
+protocol = "h2"
+min_version = "2.4.17"
+why = "Apache httpd gained mod_http2 in 2.4.17"
+
+[[capability]]
+server = "iis"
+protocol = "h2"
+min_version = "10.0"
+why = "IIS gained HTTP/2 in 10.0 (Windows Server 2016)"
+
+[[capability]]
+server = "nginx"
+protocol = "h3"
+min_version = "1.25.0"
+why = "nginx gained (experimental) HTTP/3 in 1.25.0"
+
+# --- headers an edge product always rewrites ----------------------------------------------------
+[[overwrite]]
+when_header = "cf-ray"
+header = "server"
+expected = '^cloudflare$'
+why = "Cloudflare normally rewrites Server on proxied responses; another value suggests a spoofed or non-Cloudflare edge"
+
+# --- application runtimes: two different ones claiming the same response is a layered signal ---
+# signal grammar: header:<name>:<regex>  |  cookie:<lower-case name>
+[[runtime]]
+id = "php"
+label = "PHP"
+signals = ['header:x-powered-by:^php', 'cookie:phpsessid']
+
+[[runtime]]
+id = "aspnet"
+label = "ASP.NET"
+signals = ['header:x-powered-by:asp\.net', 'header:x-aspnet-version:.', 'header:x-aspnetmvc-version:.', 'cookie:asp.net_sessionid']
+
+[[runtime]]
+id = "java"
+label = "Java"
+signals = ['header:x-powered-by:(servlet|jsp|jboss|tomcat|jetty)', 'cookie:jsessionid', 'header:server:(tomcat|jetty|jboss|glassfish|weblogic|undertow|apache-coyote)']
+
+[[runtime]]
+id = "node"
+label = "Node.js"
+signals = ['header:x-powered-by:^(express|next\.js|koa|nestjs)', 'cookie:connect.sid']
+
+[[runtime]]
+id = "python"
+label = "Python"
+signals = ['header:server:(gunicorn|uvicorn|werkzeug|waitress|simplehttp|basehttp|python/)', 'header:x-powered-by:(django|flask)']
+
+[[runtime]]
+id = "ruby"
+label = "Ruby"
+signals = ['header:server:(phusion passenger|puma|unicorn|thin|webrick)', 'header:x-powered-by:phusion passenger']
+
+# --- singleton headers that should appear once ---------------------------------------------------
+[singletons]
+headers = ["server", "x-powered-by", "content-type", "strict-transport-security", "x-frame-options", "x-content-type-options"]
