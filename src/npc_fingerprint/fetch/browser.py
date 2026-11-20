@@ -208,21 +208,13 @@ class BrowserSession:
         self.browser = self._pw = None
 
     # ------------------------------------------------------------------
-<<<<<<< HEAD
     def open(self, url: str, plan: FetchPlan, extra_headers: dict | None = None) -> Visit:
-=======
-    def open(self, url: str, plan: FetchPlan) -> Visit:
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         assert self.browser is not None
         t0 = time.monotonic()
         ctx = self.browser.new_context(
             user_agent=self.user_agent, ignore_https_errors=True, java_script_enabled=True,
-<<<<<<< HEAD
             service_workers="block", viewport={"width": 1280, "height": 800}, locale="en-US",
             extra_http_headers=extra_headers or None)   # user-supplied --header/--cookie, for scanning behind a login
-=======
-            service_workers="block", viewport={"width": 1280, "height": 800}, locale="en-US")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         snap = PageSnapshot(mode="browser", url=url, final_url=url)
         page = ctx.new_page()
         page.set_default_timeout(self.timeout * 1000)
