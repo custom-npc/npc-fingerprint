@@ -88,17 +88,12 @@ def norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", (s or "").lower())
 
 
-<<<<<<< HEAD
 def parse_cpe(c: str) -> tuple[str, str, str, str, str, str] | None:
     """(part, vendor, product, version, update, target_sw). target_sw is CPE field 10 (e.g. "windows", "linux") when present."""
-=======
-def parse_cpe(c: str) -> tuple[str, str, str, str, str] | None:
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     parts = CPE_SPLIT.split(c or "")
     if len(parts) < 7 or parts[0] != "cpe" or parts[1] != "2.3":
         return None
     un = lambda s: re.sub(r"\\(.)", r"\1", s).lower()  # noqa: E731
-<<<<<<< HEAD
     target_sw = un(parts[10]) if len(parts) > 10 else "*"
     return parts[2], un(parts[3]), un(parts[4]), un(parts[5]), un(parts[6]), target_sw
 
@@ -125,9 +120,6 @@ def canon_platform(raw: str | None) -> str | None:
         if token in r:
             return bucket
     return None
-=======
-    return parts[2], un(parts[3]), un(parts[4]), un(parts[5]), un(parts[6])
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 
 def wanted_products(techs: dict) -> set[tuple[str, str]]:
@@ -232,7 +224,6 @@ def parse_item(item: dict, wanted: set[tuple[str, str]]):
         for node in cfg.get("nodes", []):
             if node.get("negate"):
                 continue
-<<<<<<< HEAD
             matches = node.get("cpeMatch", [])
             # An AND'd node that also lists a vulnerable 'o' (operating system) CPE means "this software, AND
             # running on this OS": that sibling OS requirement is the platform precondition for every 'a'/'h'
@@ -251,28 +242,13 @@ def parse_item(item: dict, wanted: set[tuple[str, str]]):
                     continue
                 ver, upd = c[3], c[4]
                 platform = node_os or canon_platform(c[5])
-=======
-            for m in node.get("cpeMatch", []):
-                if not m.get("vulnerable"):
-                    continue
-                c = parse_cpe(m.get("criteria", ""))
-                if not c or (c[1], c[2]) not in wanted:
-                    continue
-                ver, upd = c[3], c[4]
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                 bounds = (m.get("versionStartIncluding"), m.get("versionStartExcluding"), m.get("versionEndIncluding"), m.get("versionEndExcluding"))
                 if ver not in ("*", "-"):
                     if upd not in ("*", "-"):
                         continue                       # pre-release / update-specific CPE: do not guess
-<<<<<<< HEAD
                     rows.append((cid, c[1], c[2], ver, None, None, None, None, int(and_op), platform))
                 elif any(bounds):
                     rows.append((cid, c[1], c[2], None, *bounds, int(and_op), platform))
-=======
-                    rows.append((cid, c[1], c[2], ver, None, None, None, None, int(and_op)))
-                elif any(bounds):
-                    rows.append((cid, c[1], c[2], None, *bounds, int(and_op)))
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                 else:
                     unbounded += 1                     # "all versions": too coarse to match a banner honestly
     cve_row = (cid, year, published, cve.get("vulnStatus", ""), score, sev, vector, cwe, desc[:400])
@@ -292,11 +268,7 @@ def ingest(con: sqlite3.Connection, fp, wanted: set[tuple[str, str]], year: int 
         con.executemany("INSERT OR REPLACE INTO cve VALUES (?,?,?,?,?,?,?,?,?)", cves)
         for cid in {r[0] for r in aff}:
             con.execute("DELETE FROM affected WHERE cve = ?", (cid,))
-<<<<<<< HEAD
         con.executemany("INSERT INTO affected VALUES (?,?,?,?,?,?,?,?,?,?)", aff)
-=======
-        con.executemany("INSERT INTO affected VALUES (?,?,?,?,?,?,?,?,?)", aff)
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         con.executemany("INSERT OR REPLACE INTO unanalyzed VALUES (?,?,?,?,?,?)", unal)
         cves.clear(); aff.clear(); unal.clear()
 
