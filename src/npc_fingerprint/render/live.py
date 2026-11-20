@@ -29,12 +29,8 @@ SPIN_ASCII = "|/-\\"
 SCAN_STEPS = [
     ("load", "Load and render the page"), ("tls", "TLS and HTTP protocol"), ("headers", "Security headers"),
     ("tech", "Fingerprint technologies"), ("favicon", "Favicon hashes"), ("bundle", "JavaScript bundles"),
-<<<<<<< HEAD
     ("recon", "Mine JavaScript for endpoints, secrets"), ("verify", "Verify endpoints and declared schemas"),
     ("active", "Non-destructive active checks"),
-=======
-    ("recon", "Mine JavaScript for endpoints, secrets"), ("active", "Non-destructive active checks"),
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     ("vulns", "Match CVEs and exploit data"), ("nuclei", "Suggest Nuclei templates"), ("report", "Assemble the report"),
 ]
 
