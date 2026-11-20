@@ -13,10 +13,7 @@ from dataclasses import dataclass, field
 
 from ..util import trunc
 from . import cvss
-<<<<<<< HEAD
 from . import platform as platform_mod
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 from .db import VulnDB
 from .nvd import norm, products_for, row_matches
 from .osv import OsvClient, OsvError, cve_ids, fixed_and_range
@@ -44,27 +41,17 @@ OSV_PACKAGES: dict[str, tuple[str, str]] = {
     "elasticsearch": ("Maven", "org.elasticsearch:elasticsearch"), "grafana": ("Go", "github.com/grafana/grafana"),
     "gitea": ("Go", "code.gitea.io/gitea"),
 }
-<<<<<<< HEAD
 TIERS = ("exploited", "weaponized", "likely", "severe", "minor", "suppressed")
-=======
-TIERS = ("exploited", "weaponized", "likely", "severe", "minor")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 TIER_MEANING = {
     "exploited": "Attackers are using these right now (CISA KEV). Patch first.",
     "weaponized": "Public exploit code exists. Expect it to be tried against you.",
     "likely": "High modelled chance of exploitation soon (EPSS).",
     "severe": "Serious on paper, but no sign of exploitation or public exploit.",
     "minor": "Lower impact or very unlikely to be exploited.",
-<<<<<<< HEAD
     "suppressed": "The version matches, but the target's platform doesn't: shown for transparency, not actionable.",
 }
 EPSS_LIKELY = 0.10
 DISTRO = re.compile(r"\b(ubuntu|debian|centos|red ?hat|rhel|fedora|suse|alpine|amazon ?linux|amzn\d*|el[5-9](?:_\d+)?|deb\d+u\d+)\b", re.I)
-=======
-}
-EPSS_LIKELY = 0.10
-DISTRO = re.compile(r"\b(ubuntu|debian|centos|red ?hat|rhel|fedora|suse|alpine|amazon|el[5-9]|deb\d+u\d+)\b", re.I)
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 IMPRECISE = re.compile(r"^\d+(\.\d+)?$")
 VERSION_OK = re.compile(r"^\d+(\.\d+)+")
 
@@ -142,20 +129,13 @@ def _nvd_matches(vdb: VulnDB, t: Target, tech_def: dict | None) -> list[dict]:
                 out.append({"id": row["id"], "aliases": [], "source": "nvd", "cvss": row["cvss"], "severity": row["severity"],
                             "vector": row["vector"], "summary": trunc(row["summary"], 160), "published": row["published"],
                             "fixed": fixed, "range": rng, "refs": [], "conditional": bool(row["conditional"]),
-<<<<<<< HEAD
                             "platform": row["platform"], "package": f"{row['vendor']}:{product}"})
-=======
-                            "package": f"{row['vendor']}:{product}"})
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     return out
 
 
 def _merge(into: dict, m: dict) -> None:
-<<<<<<< HEAD
     if m["source"] == "nvd":
         into.setdefault("_platforms", set()).add(m.get("platform"))
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     into["sources"] = sorted(set(into.get("sources", [])) | {m["source"]})
     for k in ("fixed", "range", "vector", "summary"):
         if not into.get(k) and m.get(k):
@@ -208,13 +188,9 @@ def _gaps(vdb: VulnDB, targets: list[Target]) -> list[dict]:
     return out
 
 
-<<<<<<< HEAD
 def run(techs: list[dict], tech_defs: dict, vdb: VulnDB, osv: OsvClient | None, libs: dict | None, banners: dict[str, str],
         platform_info: dict | None = None) -> dict:
     platform_info = platform_info or {"os": "unknown", "confidence": None, "evidence": "not checked"}
-=======
-def run(techs: list[dict], tech_defs: dict, vdb: VulnDB, osv: OsvClient | None, libs: dict | None, banners: dict[str, str]) -> dict:
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     targets, no_version = targets_from(techs, banners)
     sources = {"osv": {"used": osv is not None, "queries": 0, "cached": 0, "errors": [], "packages": 0, "offline": bool(osv and osv.offline), "skipped": 0},
                "nvd": {"available": vdb.available, "built": vdb.meta().get("updated_at"), "analysed_through": vdb.meta().get("nvd_years")},
@@ -295,7 +271,6 @@ def run(techs: list[dict], tech_defs: dict, vdb: VulnDB, osv: OsvClient | None, 
         it["confidence"] = "high"
         if it["caveats"]:
             it["confidence"] = "low" if any("imprecise" in c for c in it["caveats"]) else "medium"
-<<<<<<< HEAD
         signals = list(it["caveats"])
         if it.get("kev"):
             signals.append("listed in CISA KEV (confirmed exploited)")
@@ -324,8 +299,6 @@ def run(techs: list[dict], tech_defs: dict, vdb: VulnDB, osv: OsvClient | None, 
         it["state"] = ("suppressed" if it["coverage"] == "env_mismatch" else
                        "confirmed" if it["confidence"] == "high" else
                        "lead" if it["confidence"] == "medium" else "unverified")
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         it["epss_score"] = (it["epss"] or {}).get("score", 0)
     order = {k: i for i, k in enumerate(TIERS)}
     items.sort(key=lambda x: (order[x["priority"]], -x["epss_score"], -(x["cvss"] or 0), x["cve"]))
@@ -333,21 +306,14 @@ def run(techs: list[dict], tech_defs: dict, vdb: VulnDB, osv: OsvClient | None, 
         it.pop("epss_score", None)
 
     by_tier = {k: sum(1 for i in items if i["priority"] == k) for k in TIERS}
-<<<<<<< HEAD
     by_coverage = {k: sum(1 for i in items if i["coverage"] == k) for k in ("testable", "no_template", "env_mismatch")}
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     gaps = _gaps(vdb, targets) if vdb.available and targets else []
     degraded = bool(sources["osv"]["errors"] or sources["osv"]["skipped"]) or (not vdb.available) or (osv is None and any(norm(t.name) in OSV_PACKAGES for t in targets))
     return {
         "status": "partial" if degraded else "ok",
         "checked": [{"technology": t.name, "version": t.version} for t in targets],
-<<<<<<< HEAD
         "sources": sources, "items": items, "by_priority": by_tier, "by_coverage": by_coverage,
         "platform": platform_info,
-=======
-        "sources": sources, "items": items, "by_priority": by_tier,
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         "by_severity": {s: sum(1 for i in items if i.get("severity") == s) for s in ("critical", "high", "medium", "low")},
         "total": len(items), "no_version": no_version, "no_source": sorted(set(no_source)), "nvd_gaps": gaps,
         "tier_meaning": TIER_MEANING,
