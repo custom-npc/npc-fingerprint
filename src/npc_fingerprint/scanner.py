@@ -19,26 +19,16 @@ from .merge import build_actions, build_report, build_surface
 from .model import Finding
 from .modules import (active as active_mod, anomaly, bundle, csp as csp_mod, dnsprobe, drift, edge as edge_mod, favicon, hygiene, jsrecon,
                       libs, nuclei as nuclei_mod, secheaders, thirdparty, tls)
-<<<<<<< HEAD
 from .modules import verify as verify_mod
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 from .modules.tech import TechDB
 from .render.live import NullProgress, Progress
 from .util import normalize_url, split_url
 from .vulns import engine as vuln_engine
-<<<<<<< HEAD
 from .vulns import platform as platform_mod
 from .vulns.db import VulnDB
 from .vulns.osv import OsvClient
 
 SKIPPABLE = {"favicon", "bundle", "recon", "verify", "active", "vulns", "nuclei", "dns"}
-=======
-from .vulns.db import VulnDB
-from .vulns.osv import OsvClient
-
-SKIPPABLE = {"favicon", "bundle", "recon", "active", "vulns", "nuclei", "dns"}
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 
 @dataclass
@@ -49,7 +39,6 @@ class Options:
     no_cache: bool = False
     baseline: dict | None = None
     top_k: int = 4
-<<<<<<< HEAD
     passive: bool = False          # no active checks or endpoint verification (the page load itself is always made)
     offline: bool = False          # no network except the target (CVE data from local files and caches only)
     skip: set = field(default_factory=set)
@@ -57,12 +46,6 @@ class Options:
     scope: list = field(default_factory=list)       # extra domains, beyond the target's own, allowed for active probing
     extra_headers: dict = field(default_factory=dict)  # --header NAME:VALUE, repeatable (e.g. an Authorization token)
     cookie: str | None = None                        # --cookie "a=1; b=2", for scanning behind a login
-=======
-    passive: bool = False          # no active checks (the page load itself is always made)
-    offline: bool = False          # no network except the target (CVE data from local files and caches only)
-    skip: set = field(default_factory=set)
-    db_dir: str | None = None
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 
 class Scanner:
@@ -70,12 +53,9 @@ class Scanner:
         self.opts, self.db, self.log = opts, db, log
         if opts.no_dns:
             opts.skip.add("dns")
-<<<<<<< HEAD
         self.request_headers = dict(opts.extra_headers)
         if opts.cookie:
             self.request_headers["Cookie"] = opts.cookie
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         self.tdb = TechDB(db.techs, db.cats)
         self.retire = libs.RetireDB(db.retire)
         self.vdb = VulnDB.open(opts.db_dir)
@@ -94,11 +74,7 @@ class Scanner:
                 self.browser = None
                 self.warnings.append(f"JavaScript rendering unavailable, using static fetching: {e}")
         ua = (self.browser.user_agent if self.browser else f"Mozilla/5.0 (compatible; {UA_TOKEN})")
-<<<<<<< HEAD
         self.static = static_mod.StaticFetcher(ua, timeout=min(opts.timeout, 15.0), extra_headers=self.request_headers)
-=======
-        self.static = static_mod.StaticFetcher(ua, timeout=min(opts.timeout, 15.0))
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         if not self.vdb.available:
             self.warnings.append("CVE/exploit database not installed: run `npc-fingerprint setup` (OSV lookups still work online)")
 
@@ -111,11 +87,7 @@ class Scanner:
     # ------------------------------------------------------------------
     def _open(self, url: str):
         if self.browser is not None:
-<<<<<<< HEAD
             v = self.browser.open(url, self.plan, extra_headers=self.request_headers)
-=======
-            v = self.browser.open(url, self.plan)
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
             return v.snapshot, v.fetcher, v.close
         snap = static_mod.snapshot_from_static(url, self.static)
         return snap, self.static, (lambda: None)
@@ -237,7 +209,6 @@ class Scanner:
             if "recon" in skip:
                 pr.skip("recon", "skipped")
             else:
-<<<<<<< HEAD
                 recon = self._safe("recon", lambda: jsrecon.analyze(snap, fetcher, bundle=bun), {"skipped": True, "error": True}, warns)
                 n_sec = (recon.get("secrets") or {}).get("count", 0)
                 pr.done("recon", f"{(recon.get('endpoints') or {}).get('total', 0)} endpoints · {n_sec} secrets",
@@ -261,12 +232,6 @@ class Scanner:
                     confirmed = sum(1 for i in rb["items"] if i["state"] == "confirmed")
                     pr.done("verify", f"{sd['checked']} convention paths checked, {len(sd['found'])} present · {len(rb['items'])} endpoints checked, {confirmed} live", "ok")
 
-=======
-                recon = self._safe("recon", lambda: jsrecon.analyze(snap, fetcher), {"skipped": True, "error": True}, warns)
-                n_sec = (recon.get("secrets") or {}).get("count", 0)
-                pr.done("recon", f"{(recon.get('endpoints') or {}).get('total', 0)} endpoints · {n_sec} secrets",
-                        "bad" if any(s["severity"] in ("critical", "high") for s in (recon.get("secrets") or {}).get("items", [])) else "warn" if n_sec else "ok")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
             pr.start("active", "Running read-only active checks (CORS, methods, error page, TLS versions)")
             if self.opts.passive or "active" in skip:
                 pr.skip("active", "passive mode" if self.opts.passive else "skipped")
@@ -276,11 +241,7 @@ class Scanner:
                 pr.done("active", f"{len(active.get('checks', []))} checks · {weak} findings", "warn" if weak else "ok")
             stx = self._safe("security.txt", lambda: hygiene.check_security_txt(snap, fetcher), stx, warns)
         else:
-<<<<<<< HEAD
             for k in ("favicon", "bundle", "recon", "verify", "active"):
-=======
-            for k in ("favicon", "bundle", "recon", "active"):
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                 pr.skip(k, "target unreachable")
 
         pr.start("report", "Merging evidence into the report")
@@ -296,7 +257,6 @@ class Scanner:
         if "vulns" in skip or not reachable:
             pr.skip("vulns", "skipped" if reachable else "target unreachable")
         else:
-<<<<<<< HEAD
             banners = rep["target"].get("banners", {})
             tech_names = {d["name"] for d in rep["technologies"] if d["status"] in ("confirmed", "probable")}
             plat = self._safe("platform", lambda: platform_mod.detect(banners.get("server"), banners.get("x-powered-by"),
@@ -304,26 +264,16 @@ class Scanner:
                               {"os": "unknown", "confidence": None, "evidence": "detection failed"}, rep["warnings"])
             rep["vulnerabilities"] = self._safe("vulnerabilities", lambda: vuln_engine.run(
                 rep["technologies"], self.db.techs, self.vdb, self.osv, rep["libraries"], banners, plat), None, rep["warnings"])
-=======
-            rep["vulnerabilities"] = self._safe("vulnerabilities", lambda: vuln_engine.run(
-                rep["technologies"], self.db.techs, self.vdb, self.osv, rep["libraries"], rep["target"].get("banners", {})), None, rep["warnings"])
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
             v = rep["vulnerabilities"]
             if v is None:
                 pr.done("vulns", "failed", "warn")
             else:
-<<<<<<< HEAD
                 bp, bc = v["by_priority"], v["by_coverage"]
                 detail = f"{v['total']} CVEs · {bp['exploited']} exploited · {bp['weaponized']} with public exploit"
                 if bp["suppressed"]:
                     detail += f" · {bp['suppressed']} suppressed (platform mismatch)"
                 detail += f" · {bc['testable']} testable in Nuclei · {len(v['checked'])} versions checked"
                 pr.done("vulns", detail, "bad" if (bp["exploited"] or bp["weaponized"]) else "warn" if v["total"] or v["status"] != "ok" else "ok")
-=======
-                bp = v["by_priority"]
-                pr.done("vulns", f"{v['total']} CVEs · {bp['exploited']} exploited · {bp['weaponized']} with public exploit · {len(v['checked'])} versions checked",
-                        "bad" if (bp["exploited"] or bp["weaponized"]) else "warn" if v["total"] or v["status"] != "ok" else "ok")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                 for e in v["sources"]["osv"]["errors"][:2]:
                     rep["warnings"].append(f"OSV: {e}")
 
