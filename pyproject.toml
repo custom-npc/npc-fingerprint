@@ -4,20 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "npc-fingerprint"
-<<<<<<< HEAD
 version = "0.3.0"
-=======
-version = "0.2.0"
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 description = "One command for web recon: fingerprinting, security posture, CVE matching with exploit data, JS recon, active checks and Nuclei suggestions."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-or-later" }
-<<<<<<< HEAD
-authors = [{ name = "npc-fingerprint contributors" }]
-=======
 authors = [{ name = "custom-npc" }]
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 keywords = ["fingerprinting", "reconnaissance", "defensive-security", "wappalyzer", "cve", "nuclei", "tls", "http-headers", "osint"]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -52,16 +44,10 @@ psl = ["publicsuffixlist>=1.0"]       # exact registrable-domain logic (a built-
 dev = ["ruff"]
 
 [project.urls]
-<<<<<<< HEAD
-Homepage = "https://github.com/YOUR-GITHUB-USER/npc-fingerprint"
-Issues = "https://github.com/YOUR-GITHUB-USER/npc-fingerprint/issues"
-Changelog = "https://github.com/YOUR-GITHUB-USER/npc-fingerprint/blob/main/CHANGELOG.md"
-=======
 Homepage = "https://github.com/custom-npc/npc-fingerprint"
 Repository = "https://github.com/custom-npc/npc-fingerprint"
 Issues = "https://github.com/custom-npc/npc-fingerprint/issues"
 Changelog = "https://github.com/custom-npc/npc-fingerprint/blob/main/CHANGELOG.md"
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 [project.scripts]
 npc-fingerprint = "npc_fingerprint.cli:main"
