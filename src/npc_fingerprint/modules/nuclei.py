@@ -42,7 +42,6 @@ def _cpe_parts(tdef: dict | None) -> tuple[str | None, str | None]:
 
 
 def suggest(rep: dict, vdb: VulnDB, tech_defs: dict, url: str) -> dict:
-<<<<<<< HEAD
     """Only `coverage == "testable"` CVEs ever produce a Nuclei suggestion. This is deliberate: a CVE can be a
     real, high-priority match (exploited/weaponized/likely) and still have no template, or be suppressed because
     the target's platform doesn't meet the CVE's precondition — those are reported with their counts and reasons
@@ -70,18 +69,6 @@ def suggest(rep: dict, vdb: VulnDB, tech_defs: dict, url: str) -> dict:
             if nu is None:
                 no_template_examples.append(it["cve"])
             continue
-=======
-    tag_counts = vdb.nuclei_tag_counts() if vdb.available else {}
-    have_index = bool(tag_counts)
-    out: dict = {"executed": False, "installed": shutil.which("nuclei") is not None, "template_index": have_index,
-                 "by_cve": [], "tags": [], "commands": {}, "notes": [],
-                 "note": "Suggestions only: npc-fingerprint never runs Nuclei. Run it only against systems you are authorised to test."}
-    # 1) exact CVE templates -------------------------------------------------------------------------
-    order = {k: i for i, k in enumerate(TIERS)}
-    seen: set[str] = set()
-    for it in (rep.get("vulnerabilities") or {}).get("items", []):
-        nu = it.get("nuclei")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         if nu and nu["template"] not in seen:
             seen.add(nu["template"])
             out["by_cve"].append({"template": nu["template"], "cve": it["cve"], "severity": nu.get("severity") or it.get("severity"),
@@ -89,14 +76,11 @@ def suggest(rep: dict, vdb: VulnDB, tech_defs: dict, url: str) -> dict:
                                   "why": f"{it['technology']} {it['version']} matches {it['cve']} ({it['priority']})"})
     out["by_cve"].sort(key=lambda x: (order.get(x["priority"], 9), x["template"]))
     out["by_cve"] = out["by_cve"][:25]
-<<<<<<< HEAD
     if out["skipped"]["no_template"]:
         out["notes"].append(f"{out['skipped']['no_template']} matched CVE(s) have no Nuclei template yet, including {', '.join(no_template_examples[:3])}" +
                             (f" (+{out['skipped']['no_template'] - len(no_template_examples[:3])} more)" if out["skipped"]["no_template"] > 3 else ""))
     if out["skipped"]["env_mismatch"]:
         out["notes"].append(f"{out['skipped']['env_mismatch']} matched CVE(s) were suppressed as a platform mismatch, including {', '.join(mismatch_examples[:3])}: see the CVE section for why")
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
     # 2) technology tags --------------------------------------------------------------------------------
     chosen: dict[str, dict] = {}
