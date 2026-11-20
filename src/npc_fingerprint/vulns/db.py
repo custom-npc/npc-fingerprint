@@ -11,11 +11,7 @@ CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE IF NOT EXISTS cve(id TEXT PRIMARY KEY, year INTEGER, published TEXT, status TEXT, cvss REAL, severity TEXT,
                                vector TEXT, cwe TEXT, summary TEXT);
 CREATE TABLE IF NOT EXISTS affected(cve TEXT, vendor TEXT, product TEXT, exact TEXT, vsi TEXT, vse TEXT, vei TEXT, vee TEXT,
-<<<<<<< HEAD
                                     conditional INTEGER, platform TEXT);
-=======
-                                    conditional INTEGER);
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 CREATE INDEX IF NOT EXISTS affected_vp ON affected(vendor, product);
 CREATE INDEX IF NOT EXISTS affected_cve ON affected(cve);
 CREATE TABLE IF NOT EXISTS unanalyzed(id TEXT PRIMARY KEY, year INTEGER, published TEXT, cvss REAL, severity TEXT, summary TEXT);
@@ -32,7 +28,6 @@ def db_path(directory: Path | None = None) -> Path:
     return (Path(directory) if directory else data_dir()) / "vulns.sqlite"
 
 
-<<<<<<< HEAD
 def _migrate(con: sqlite3.Connection) -> None:
     """Add columns introduced after a user's database was first built. ALTER TABLE ADD COLUMN only; never drops data."""
     cols = {r["name"] for r in con.execute("PRAGMA table_info(affected)")}
@@ -41,8 +36,6 @@ def _migrate(con: sqlite3.Connection) -> None:
         con.commit()
 
 
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 def connect(directory: Path | None = None, create: bool = False) -> sqlite3.Connection | None:
     p = db_path(directory)
     if not p.exists() and not create:
@@ -52,10 +45,7 @@ def connect(directory: Path | None = None, create: bool = False) -> sqlite3.Conn
     con.row_factory = sqlite3.Row
     if create:
         con.executescript(SCHEMA)
-<<<<<<< HEAD
         _migrate(con)
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     return con
 
 
@@ -89,11 +79,7 @@ class VulnDB:
 
     def candidates(self, vendors: list[str], product: str) -> list[sqlite3.Row]:
         ph = ",".join("?" * len(vendors))
-<<<<<<< HEAD
         return self._q(f"SELECT c.*, a.vendor, a.product, a.exact, a.vsi, a.vse, a.vei, a.vee, a.conditional, a.platform FROM affected a "
-=======
-        return self._q(f"SELECT c.*, a.vendor, a.product, a.exact, a.vsi, a.vse, a.vei, a.vee, a.conditional FROM affected a "
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                        f"JOIN cve c ON c.id = a.cve WHERE a.vendor IN ({ph}) AND a.product = ?", (*vendors, product))
 
     def cve(self, cve: str):
