@@ -141,12 +141,9 @@ def build_actions(rep: dict, limit: int = 8) -> list[dict]:
     for sct in (rep.get("recon") or {}).get("secrets", {}).get("items", [])[:4]:
         if sct["severity"] in ("critical", "high"):
             add(sct["severity"], "secret", f"Rotate the exposed {sct['type']} in {sct['where']} ({sct['redacted']})")
-<<<<<<< HEAD
     for pkg in ((rep.get("recon") or {}).get("npm_confusion") or {}).get("checked", []):
         if pkg["state"] == "confirmed":
             add("high", "supply-chain", f"Publish/reserve the npm package name '{pkg['name']}' yourself: it is referenced in your code but unclaimed publicly")
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     if rep["target"].get("status") is not None:
         if rep["target"].get("scheme") != "https":
             add("high", "tls", "Serve the site over HTTPS (it answers over plain HTTP only)")
