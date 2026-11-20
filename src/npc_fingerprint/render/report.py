@@ -10,17 +10,11 @@ from .layout import Line, bar, fit_spans
 
 SEV_STYLE = {"critical": "bad", "high": "bad", "medium": "warn", "low": "dim", "info": "dim"}
 STATE_ICON = {"pass": ("pass", "ok"), "weak": ("warn", "warn"), "missing": ("bad", "bad"), "n/a": ("na", "na"), "info": ("na", "dim")}
-<<<<<<< HEAD
 TIER_STYLE = {"exploited": "bad", "weaponized": "bad", "likely": "warn", "severe": "warn", "minor": "dim", "suppressed": "dim"}
 TIER_TITLE = {"exploited": "Exploited in the wild", "weaponized": "Public exploit available", "likely": "Likely to be exploited",
               "severe": "Severe, no known exploitation", "minor": "Lower priority", "suppressed": "Suppressed: platform mismatch"}
 STATE_ICON_CVE = {"confirmed": ("pass", "ok"), "lead": ("warn", "warn"), "unverified": ("na", "dim"), "suppressed": ("minus", "dim")}
 COVERAGE_BADGE = {"testable": ("nuclei ", "accent"), "no_template": ("no template ", "dim"), "env_mismatch": ("mismatch ", "dim")}
-=======
-TIER_STYLE = {"exploited": "bad", "weaponized": "bad", "likely": "warn", "severe": "warn", "minor": "dim"}
-TIER_TITLE = {"exploited": "Exploited in the wild", "weaponized": "Public exploit available", "likely": "Likely to be exploited",
-              "severe": "Severe, no known exploitation", "minor": "Lower priority"}
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 
 class Section:
@@ -54,15 +48,12 @@ class Section:
 
 
 def _cve_line(sec: Section, it: dict, g: dict, detail: bool) -> None:
-<<<<<<< HEAD
     """Every CVE line leads with its state icon (confirmed/lead/unverified/suppressed — the same icon language
     every other section uses) and a coverage badge saying whether Nuclei can actually test it. This is the
     direct fix for a report naming several critical CVEs while Nuclei suggestions come back empty with no
     explanation: here, the reason sits right next to the claim.
     """
     icon, style = STATE_ICON_CVE.get(it.get("state"), ("na", "dim"))
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     badges: Line = []
     if it.get("kev"):
         badges.append(("KEV ", "bad"))
@@ -71,7 +62,6 @@ def _cve_line(sec: Section, it: dict, g: dict, detail: bool) -> None:
     ep = it.get("epss")
     if ep and ep["score"] >= 0.10:
         badges.append((f"EPSS {ep['score']:.0%} ", "warn"))
-<<<<<<< HEAD
     cb = COVERAGE_BADGE.get(it.get("coverage"))
     if cb:
         badges.append(cb)
@@ -87,18 +77,6 @@ def _cve_line(sec: Section, it: dict, g: dict, detail: bool) -> None:
             why = it.get("summary") or ""
             cav = it["caveats"][0] if it.get("caveats") else ""
             sec.line([(trunc(why, 70), "dim")] + ([(f" {g['dot']} {trunc(cav, 60)}", "warn")] if cav else []), 7)
-=======
-    if it.get("nuclei"):
-        badges.append(("nuclei ", "accent"))
-    sev = (it.get("severity") or "?").upper()
-    score = f" {it['cvss']:.1f}" if it.get("cvss") is not None else ""
-    tail = f"{it['technology']} {it['version']}" + (f" {g['arrow']} {it['fixed']}" if it.get("fixed") else "")
-    sec.line([(f"{it['cve']:<16}", "emph"), (f"{sev}{score}".ljust(11), SEV_STYLE.get(it.get("severity") or "", "dim"))] + badges + [(tail, "value")], 5)
-    if detail:
-        why = it.get("summary") or ""
-        cav = it["caveats"][0] if it.get("caveats") else ""
-        sec.line([(trunc(why, 70), "dim")] + ([(f" {g['dot']} {trunc(cav, 60)}", "warn")] if cav else []), 7)
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 
 def build_sections(rep: dict, g: dict, width: int, verbose: bool = False, brief: bool = False) -> list[Line]:
@@ -123,7 +101,6 @@ def build_sections(rep: dict, g: dict, width: int, verbose: bool = False, brief:
     if v is not None:
         per_tier = 3 if not verbose else 50
         shown_any = False
-<<<<<<< HEAD
         bc = v.get("by_coverage", {})
         if v["total"]:
             cov_line: Line = [(f"{v['total']} CVE(s) matched by version", "value")]
@@ -137,11 +114,6 @@ def build_sections(rep: dict, g: dict, width: int, verbose: bool = False, brief:
         for tier in ("exploited", "weaponized", "likely", "severe", "minor", "suppressed"):
             items = [i for i in v["items"] if i["priority"] == tier]
             if not items or (brief and tier in ("minor", "suppressed")):
-=======
-        for tier in ("exploited", "weaponized", "likely", "severe", "minor"):
-            items = [i for i in v["items"] if i["priority"] == tier]
-            if not items or (brief and tier == "minor"):
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                 continue
             shown_any = True
             s.line([(f"{TIER_TITLE[tier]} ({len(items)})", TIER_STYLE[tier])])
@@ -150,11 +122,7 @@ def build_sections(rep: dict, g: dict, width: int, verbose: bool = False, brief:
                 _cve_line(s, it, g, detail=True)
             if len(items) > per_tier:
                 s.note(f"+{len(items) - per_tier} more (use -v)")
-<<<<<<< HEAD
         if not shown_any and not v["total"]:
-=======
-        if not shown_any:
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
             msg = "No CVEs match the versions detected." if v["checked"] else "No technology with a usable version was detected, so nothing could be matched."
             s.line([(g["pass"] if v["checked"] else g["na"], "ok" if v["checked"] else "dim"), (" " + msg, "value")])
         if v["checked"]:
@@ -252,36 +220,27 @@ def build_sections(rep: dict, g: dict, width: int, verbose: bool = False, brief:
             s.item("pass", "ok", "Secrets", f"none found in {rc['scanned']['scripts']} scripts and the page")
         elif len(sec) > 5 and not verbose:
             s.note(f"+{len(sec) - 5} more (use -v)")
-<<<<<<< HEAD
         fw = rc.get("framework")
         if fw:
             s.item("info", "dim", "Framework", f"{fw['name']} (build {fw['build_id']}): {fw['routes_found']} route(s) in its own manifest, {fw['chunks_fetched']} extra chunk(s) mined")
         ep = rc["endpoints"]
         kinds = [(k, ep["by_kind"][k]) for k in ("admin", "auth", "api", "route", "file", "ops", "websocket") if ep["by_kind"].get(k)]
-=======
-        ep = rc["endpoints"]
-        kinds = [(k, ep["by_kind"][k]) for k in ("admin", "auth", "api", "file", "ops", "websocket") if ep["by_kind"].get(k)]
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         s.item("na" if not kinds else "info", "dim", "Endpoints", f"{ep['total']} referenced" + (": " + ", ".join(f"{len(v)} {k}" for k, v in kinds) if kinds else ""))
         for k, items in kinds[:4]:
             for e in items[: (6 if verbose else 2)]:
                 s.note(f"{k:<9}{e['value']}", 5)
-<<<<<<< HEAD
         if rc.get("graphql_operations"):
             s.item("info", "dim", "GraphQL operations", ", ".join(rc["graphql_operations"][: (15 if verbose else 5)]))
         if rc.get("trpc_procedures"):
             s.item("info", "dim", "tRPC procedures", ", ".join(rc["trpc_procedures"][: (15 if verbose else 5)]))
         if rc.get("env_vars"):
             s.item("info", "dim", "Build config exposed", ", ".join(rc["env_vars"][: (20 if verbose else 6)]))
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         h = rc["hosts"]
         for label, vals in (("Internal hosts", h["internal"]), ("Staging hosts", h["staging"])):
             if vals:
                 s.item("warn", "warn", label, ", ".join(vals[:4]))
         for b in h["buckets"][:4]:
             s.item("warn", "warn", "Cloud storage", f"{b['provider']} bucket '{b['name']}' referenced: check its access policy")
-<<<<<<< HEAD
         npm = rc.get("npm_confusion")
         if npm:
             for c in npm["checked"]:
@@ -310,8 +269,6 @@ def build_sections(rep: dict, g: dict, width: int, verbose: bool = False, brief:
                 icon, style = STATE_ICON_V.get(i["state"], ("na", "dim"))
                 tag = " (shadow)" if i.get("kind") == "shadow" else ""
                 s.line([(g[icon], style), (" ", ""), (i["value"] + tag, "value"), (f"  {i['note']}", "dim")], 5)
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         for c in rc.get("comments", [])[:3]:
             s.item("warn", "warn", "HTML comment", c)
         for n in rc.get("notes", []):
