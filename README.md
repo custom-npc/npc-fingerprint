@@ -1,8 +1,3 @@
-[README.md](https://github.com/user-attachments/files/35174947/README.md)
-<<<<<<< HEAD
-=======
-[README.md](https://github.com/user-attachments/files/34305169/README.md)
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 <h1 align="center">npc-fingerprint</h1>
 <p align="center"><b>One command for defensive web recon.</b><br>
 Fingerprinting · security posture · CVE matching with exploit data · JavaScript recon · read-only active checks · Nuclei suggestions<br>
