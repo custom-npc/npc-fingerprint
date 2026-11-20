@@ -76,11 +76,7 @@ def _wire_headers(r) -> list[tuple[str, str]]:
 class StaticFetcher:
     """Connection-reusing fetcher (one Session per run)."""
 
-<<<<<<< HEAD
     def __init__(self, user_agent: str, timeout: float = 15.0, verify: bool = False, extra_headers: dict | None = None):
-=======
-    def __init__(self, user_agent: str, timeout: float = 15.0, verify: bool = False):
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         self.timeout = timeout
         self.verify = verify
         self.session = _http.Session()
@@ -89,11 +85,8 @@ class StaticFetcher:
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9",
         })
-<<<<<<< HEAD
         if extra_headers:          # user-supplied --header/--cookie, for scanning behind a login
             self.session.headers.update(extra_headers)
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         try:
             self.session.max_redirects = 8
         except Exception:  # noqa: BLE001
