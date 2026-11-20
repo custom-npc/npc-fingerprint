@@ -23,21 +23,15 @@ examples:
   npc-fingerprint -u https://example.com            full scan (live progress, then a headed report)
   npc-fingerprint -u example.com -v                 add the evidence behind every claim
   npc-fingerprint -u https://example.com --json > report.json
-<<<<<<< HEAD
   npc-fingerprint -u https://example.com --output sarif > report.sarif    for GitHub code scanning / DefectDojo
   npc-fingerprint -u https://example.com --diff report.json         what changed since last time
   npc-fingerprint -u http://localhost:8000 --no-browser --passive   static, no active checks
   npc-fingerprint -u https://example.com --cookie "session=abc123"  scan behind a login
-=======
-  npc-fingerprint -u https://example.com --baseline report.json     what changed since last time
-  npc-fingerprint -u http://localhost:8000 --no-browser --passive   static, no active checks
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
   npc-fingerprint setup                              first-time setup (browser + data), no root needed
 
 Defensive reconnaissance only: public pages, read-only requests, nothing is exploited, brute-forced or guessed.
 Scan only systems you own or are authorised to assess."""
 
-<<<<<<< HEAD
 SCAN_SKIPS = ("favicon", "bundle", "recon", "verify", "active", "vulns", "nuclei", "dns")
 
 
@@ -46,9 +40,6 @@ def _parse_header(raw: str) -> tuple[str, str]:
     if not sep:
         raise argparse.ArgumentTypeError(f"--header expects NAME:VALUE, got {raw!r}")
     return name.strip(), value.strip()
-=======
-SCAN_SKIPS = ("favicon", "bundle", "recon", "active", "vulns", "nuclei", "dns")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -57,13 +48,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("urls", nargs="*", metavar="URL", help="targets (same as -u)")
     p.add_argument("-u", "--url", action="append", default=[], metavar="URL", help="target URL or host (repeatable); a bare host tries https then http")
     p.add_argument("-f", "--file", metavar="FILE", help="file with one target per line (# comments allowed)")
-<<<<<<< HEAD
     p.add_argument("--json", action="store_true", help="shorthand for --output json")
     p.add_argument("--output", choices=("text", "json", "sarif"), default=None, metavar="FORMAT",
                    help="text (default), json, or sarif (SARIF 2.1.0, for GitHub code scanning / DefectDojo / Jira); json/sarif disable the live view")
-=======
-    p.add_argument("--json", action="store_true", help="machine-readable JSON on stdout (no colour, no live view; notices go to stderr)")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     p.add_argument("-v", "--verbose", action="store_true", help="show the evidence chain behind every claim and all findings")
     p.add_argument("--brief", action="store_true", help="only the card, priority actions, CVEs and Nuclei suggestions")
     p.add_argument("--summary", action="store_true", help="only the one-screen scan card")
@@ -71,15 +58,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--passive", action="store_true", help="no active checks (CORS, methods, error page, TLS versions, GraphQL); the page is still loaded")
     p.add_argument("--offline", action="store_true", help="no network except the target: CVE data from local files and caches only")
     p.add_argument("--skip", metavar="LIST", help=f"comma list of stages to skip: {','.join(SCAN_SKIPS)}")
-<<<<<<< HEAD
     p.add_argument("--baseline", "--diff", dest="baseline", metavar="FILE", help="previous --json report; adds a drift view (added/removed/changed)")
     p.add_argument("--scope", metavar="DOMAIN[,DOMAIN...]", help="extra domain(s), beyond the target's own, allowed for endpoint verification and active checks")
     p.add_argument("--header", action="append", default=[], type=_parse_header, metavar="NAME:VALUE",
                    help="send this header on every request (repeatable), e.g. for a low-privilege authenticated scan")
     p.add_argument("--cookie", metavar="VALUE", help='raw Cookie header to send on every request, e.g. --cookie "session=abc123"')
-=======
-    p.add_argument("--baseline", metavar="FILE", help="previous --json report; adds a drift view (added/removed/changed)")
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     p.add_argument("--timeout", type=float, default=20.0, metavar="SEC", help="per-target time budget (default 20)")
     p.add_argument("--no-dns", action="store_true", help="skip public DNS lookups (same as --skip dns)")
     p.add_argument("--no-cache", action="store_true", help="ignore the favicon and OSV caches")
@@ -288,11 +271,8 @@ def main(argv: list[str] | None = None) -> int:
     if not skip <= set(SCAN_SKIPS):
         print(f"{TOOL_NAME}: error: --skip accepts {', '.join(SCAN_SKIPS)}", file=sys.stderr)
         return 2
-<<<<<<< HEAD
     fmt = args.output or ("json" if args.json else "text")
     scope = [s.strip() for s in args.scope.split(",") if s.strip()] if args.scope else []
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
 
     from .db import store
     from .modules import drift
@@ -314,18 +294,11 @@ def main(argv: list[str] | None = None) -> int:
     db = store.load(args.db_dir)
     age = _age_days((db.meta.get("technologies") or {}).get("built_at"))
     opts = Options(no_browser=args.no_browser, timeout=args.timeout, no_dns=args.no_dns, no_cache=args.no_cache, baseline=baseline,
-<<<<<<< HEAD
                    passive=args.passive, offline=args.offline, skip=skip, db_dir=args.db_dir, scope=scope,
                    extra_headers=dict(args.header), cookie=args.cookie)
     console = emit.make_console(no_color=args.no_color, width=args.width) if fmt == "text" else None
     err_console = live.make_err_console(no_color=args.no_color)
     use_live = live.live_allowed(err_console, args.no_live, args.quiet, fmt != "text")
-=======
-                   passive=args.passive, offline=args.offline, skip=skip, db_dir=args.db_dir)
-    console = None if args.json else emit.make_console(no_color=args.no_color, width=args.width)
-    err_console = live.make_err_console(no_color=args.no_color)
-    use_live = live.live_allowed(err_console, args.no_live, args.quiet, args.json)
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     ascii_err = use_ascii(args.ascii, sys.stderr)
     plain = live.PlainReporter(ascii_only=ascii_err, quiet=args.quiet)
 
@@ -350,11 +323,7 @@ def main(argv: list[str] | None = None) -> int:
             reports.append(rep)
             if rep["target"]["status"] is None:
                 failed += 1
-<<<<<<< HEAD
             if fmt == "text":
-=======
-            if not args.json:
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
                 emit.render_report(rep, console, verbose=args.verbose, ascii_only=args.ascii, width=args.width, brief=args.brief, summary_only=args.summary)
                 if i < len(targets):
                     print()
@@ -365,22 +334,15 @@ def main(argv: list[str] | None = None) -> int:
         if scanner is not None:
             scanner.close()
 
-<<<<<<< HEAD
     if fmt == "json":
-=======
-    if args.json:
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
         first = reports[0] if reports else {}
         doc = {"schema_version": SCHEMA_VERSION, "schema_minor": 1, "tool": TOOL_NAME, "version": __version__, "generated_at": utcnow_iso(),
                "db": first.get("db", {}), "reports": reports}
         sys.stdout.write(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
-<<<<<<< HEAD
     elif fmt == "sarif":
         from .render import sarif
         doc = sarif.build(reports[0]) if len(reports) == 1 else sarif.build_multi(reports)
         sys.stdout.write(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
-=======
->>>>>>> bb7f678485965c5717967a6ddc67f4a955146a16
     return 1 if failed else 0
 
 
